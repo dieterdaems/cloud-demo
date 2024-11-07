@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  wikijs
+  namespace: default
+  labels:
+    app:  wikijs
+spec:
+  selector:
+    matchLabels:
+      app: wikijs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  wikijs
+    spec:
+      containers:
+      - name:  wikijs
+        image:  ghcr.io/requarks/wiki:2
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_status/healthz
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+        - name: DB_HOST
+          value: "mysql2"
+        - name: DB_TYPE
+          value: "mysql"
+        - name: DB_PORT
+          value: "3307"
+        - name: DB_USER
+          value: "wikijs"
+        - name: DB_PASS
+          value: "secretpassword"
+        - name: DB_NAME
+          value: "wikijs"
+        ports:
+        - containerPort:  80
