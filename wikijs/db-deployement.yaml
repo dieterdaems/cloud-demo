@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql2
+  namespace: default
+  labels:
+    app: mysql2
+spec:
+  selector:
+    matchLabels:
+      app: mysql2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql2
+    spec:
+      containers:
+        - name: mysql2
+          image: mysql:latest
+          ports:
+            - containerPort: 3307
+          env:
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "yes"
+            - name: MYSQL_DATABASE
+              value: "wikijs"
+            - name: MYSQL_USER
+              value: "wikijs"
+            - name: MYSQL_PASSWORD
+              value: "secretpassword"
+          volumeMounts:
+            - name: mysql-persistent-storage2
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage2
+          persistentVolumeClaim:
+            claimName: mysql2-pv-claim
+
