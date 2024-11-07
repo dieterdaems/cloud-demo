@@ -48,7 +48,7 @@ spec:
         - name: DB_TYPE
           value: "mysql"
         - name: DB_PORT
-          value: "3307"
+          value: "3306"
         - name: DB_USER
           value: "wikijs"
         - name: DB_PASS
